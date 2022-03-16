@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            Container
+        </title>
+       
+    
+        {% load static %}  
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >  
+        <link href="{% static 'insert_records.css' %}" rel="stylesheet" >
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+      
+        <style>
+          #bg{
+              background: url("static/rocket3.jpg" );
+           
+              
+            
+              background-repeat: no-repeat;
+              background-position: center;
+             
+               background-size: cover;
+               
+          }  
+          a:link, a:visited {
+      background-color: transparent;
+      color: black;
+      border: 2px solid rgb(3, 17, 83);
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    a:hover, a:active {
+      background-color: rgb(80, 241, 80);
+      color: black;
+    }
+        </style>
+    </head>
+    <body id = "bg" class = "bg-image hover-overlay">
+
+        <div
+        class="mask"
+        style="
+          background: linear-gradient(
+            45deg,
+            rgba(29, 236, 197, 0.5),
+            rgba(91, 14, 214, 0.5) 200%
+          );
+    
+        "
+      >
+        <center>
+
+            <div id = "heading" style = "height: 100px;" >
+           
+                <div id ="Logo"> 
+                    <img src = "static/Logo.png" width = "180" height = "100" >
+    
+                </div>
+               
+                <h1 style="font-size: 60px; "> NRC App (Powered with A.I.) </h1>
+           
+            </div>
+        </br>
+    
+    </br>
+    <form method='post'>
+                {% csrf_token %}
+        <div id = "text1" style =" font-size: 30px; text-shadow: 2px 2px 5px blue; font-family: monospace;">  <a href =  "{% url 'index' %}"> Data Upload </a></div>
+    </form>
+
+    <form method='post'>
+        {% csrf_token %}
+        <p>
+    <div id = "text1" style =" font-size: 30px; text-shadow: 2px 2px 5px blue; font-family: monospace;">  <a href =  "{% url 'data_analysis' %}"> Data Analysis </a></div>
+    </p>
+    </form>
+
+    <form method='post'>
+        {% csrf_token %}
+        <p>
+<div id = "text1" style =" font-size: 30px; text-shadow: 2px 2px 5px blue; font-family: monospace;">  <a href =  "{% url 'dl_operations' %}"> AI Cost Predictor </a></div>
+</p>
+</form>
+
+
+
+<form method='post'>
+    {% csrf_token %}
+    <p>
+<div id = "text1" style =" font-size: 30px; text-shadow: 2px 2px 5px blue; font-family: monospace;">  <a href =  "{% url 'graphical_data_analysis' %}"> Graphical Data Analysis </a></div>
+</p>
+</form>
+      
+
+    </center>
+       
+    </body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Excel file upload and processing
+        </title>
+        <meta charset="UTF-8">
+    
+        {% load static %}  
+        <meta charset="UTF-8">
+    {% load static %}  
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" > 
+    <link href="{% static 'insert_records.css' %}" rel="stylesheet" >
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <style>
+         a:link, a:visited {
+      background-color: transparent;
+      color: black;
+      border: 1px solid rgb(3, 17, 83);
+      padding: 5px 12px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    a:hover, a:active {
+      background-color: rgb(41, 69, 226);
+      color: black;
+    }
+        </style>
+
+
+    </head>
+    <body id = "grad">
+        <center>
+        <div id = "heading" >
+            <div id ="Logo"> 
+                <img src = "static/Logo.png" width = "130" height = "71" >
+            </div>
+    
+        <h1> Upload Excel Files </h1>
+        
+        </div>
+    
+    </br>
+</br>
+</br>
+
+
+        
+        <form action="{% url "index" %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <table>
+
+            <tr> 
+                 <td> Upload Controlling Acc file here
+                     <p>
+                     
+                    <input type="file"
+                   title="Upload excel file"
+                   name="excel_file"
+                   class="form-control"
+                   style="border: 1px solid black; padding: 5px;"
+                   >
+            <p>
+            <input type="submit"
+                   value="Upload"
+                   name="upload"
+                   class = "btn btn-outline-success"
+                   style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                </td>
+                <td style = "width: 10%"> </td>
+
+                <td> 
+                    
+                    Upload DB Search Results file here
+                    <p>
+                    <input type="file"
+                    title="Upload excel file"
+                    name="excel_file2"
+                    class="form-control"
+                    style="border: 1px solid black; padding: 5px;"
+                    >
+             <p>
+             <input type="submit"
+                    value="Upload"
+                    name="upload2"
+                    class = "btn btn-outline-success"
+                    style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                 </td>
+
+                 <td style = "width: 10%"> </td>
+
+                <td> 
+                    
+                    Upload Systems V37 file here
+                    <p>
+                    <input type="file"
+                    title="Upload excel file"
+                    name="excel_file3"
+                    class="form-control"
+                    style="border: 1px solid black; padding: 5px;"
+                    >
+                    
+             <p>
+             <input type="submit"
+                    value="Upload"
+                    name="upload3"
+                    class = "btn btn-outline-success"
+                    style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                 </td>
+             
+                    
+               
+
+
+                </tr>
+             
+                </table>
+               <br>
+                <table align = center>
+
+                    <tr>
+                       <td><input type="submit"
+                        value="Update Database"
+                        name="analyze"
+                        class = "btn btn-outline-success"
+                        style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                     </td>
+                    <td style ="width:30%"></td>
+                   
+                    <td><a href = "{% url 'first_page' %}" > &#x1F3E0 </a></td>
+    
+                    </tr>
+                </table>
+        </form>
+
+      
+    </center>
+       
+    </body>
+</html>

@@ -1,0 +1,2477 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% load static %}
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" > 
+  <link href="{% static 'insert_records.css' %}" rel="stylesheet" >
+
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <div>
+  <title>Graphical Data Analysis</title>
+  </div>
+
+
+        <style>
+            .slidecontainer {
+              width: 100%;
+            }
+            
+            .slider {
+              -webkit-appearance: none;
+              width: 100%;
+              height: 25px;
+              background: #208883;
+              height: 15px;
+              border-radius: 5px;   
+              outline: none;
+              opacity: 0.1;
+              -webkit-transition: .2s;
+              transition: opacity .2s;
+            }
+            
+            .slider:hover {
+              opacity: 10;
+            }
+            
+            .slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              height: 15px;
+              border-radius: 5px;   
+              width: 15px;
+              height: 25px;
+              background: #04AA6D;
+              cursor: pointer;
+            }
+            
+            .slider::-moz-range-thumb {
+              width: 15px;
+              height: 25px;
+              background: #04AA6D;
+              height: 15px;
+              border-radius: 5px;   
+              cursor: pointer;
+            }
+
+            a:link, a:visited {
+              background-color: transparent;
+              color: black;
+              border: 1px solid rgb(3, 17, 83);
+              padding: 5px 12px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+            }
+            
+            a:hover, a:active {
+              background-color: rgb(41, 69, 226);
+              color: black;
+            }
+            .currSign:after {
+            content: ' €';
+            }
+            </style>
+    </head>
+    <body id = "grad">
+      <center>
+        <div id = "heading" >
+          <div id ="Logo"> 
+              <img src = "static/Logo.png" width = "130" height = "71" >
+          </div>
+      
+      <h1> A.I. Predictors </h1>
+      
+      </div>
+      
+        <form method = 'post'>
+            {% csrf_token %}
+        
+            <h5 style="font-family:monospace" align = center> <b>Deep Learning Predictor (ANN Model) </b></h5>
+                <table align = center>
+
+                    <tr>
+                       
+                     <td>
+                         <input type = "submit"
+                         value ="Prepare Training Data"
+                         name = "AI"
+                         class = "btn btn-outline-warning"
+                         style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                     </td>
+                    
+                     <td style = "width: 5%">        </td>
+                   
+
+                     <td> <div class="slidecontainer" style = "font-family: monospace;">
+                      <input type="range" min="5" max="50" value = "30"   step="5" id = "myRange0" name = 'mul' >
+                      Data&nbspSet&nbspMultiplier:&nbsp<span id="demo0"></span>
+                    </div> 
+                    <script>
+                      var slider0 = document.getElementById("myRange0");
+                      var output0 = document.getElementById("demo0");
+                      output0.innerHTML = slider0.value;
+                      
+                      slider0.oninput = function() {
+                        output0.innerHTML = this.value;
+                      }
+                      </script>
+                  </td>
+
+                  <td> </td>
+                  <td> </td>
+                 
+                 
+                     <td> <div class="slidecontainer" style = "font-family: monospace;">
+                      <input type="range" min="1" max="20" value = "5" step="1" id = "myRange" name = 'epochs' >
+                      Epochs: <span id="demo"></span>
+                    </div> 
+                    <script>
+                      var slider = document.getElementById("myRange");
+                      var output = document.getElementById("demo");
+                      output.innerHTML = slider.value;
+                      
+                      slider.oninput = function() {
+                        output.innerHTML = this.value;
+                      }
+                      </script>
+                  </td>
+                    
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+                  <td> </td>
+
+                     <td> <div class="slidecontainer" style = "font-family: monospace;">
+                        <input type="range" min="1000" max="20000" value = "10000" step="500" id = "myRange2" name = 'tolerance' >
+                        Tolerance: <span id="demo2"></span>
+                      </div> 
+                      <script>
+                        var slider2 = document.getElementById("myRange2");
+                        var output2 = document.getElementById("demo2");
+                        output2.innerHTML = slider2.value;
+                        
+                        slider2.oninput = function() {
+                          output2.innerHTML = this.value;
+                        }
+                        </script>
+                    </td>
+                  <td style = "width: 2%"></td>
+                     <td>
+                        <input type = "submit"
+                        value ="Train Neural Network"
+                        name = "NN"
+                        class="btn btn-outline-warning"
+                        style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                    </td>
+                    <td style = "width: 5%">        </td>
+                    <td style = "font-family: monospace;"> Tested&nbspAccuracy: </td>
+                 
+                    <td style = "font-family: monospace;"> <span> {{accuracy}}</span></td>
+                    <td> %</td>
+                  <td style = "width:5%"></td>
+                  <td><a href = "{% url 'first_page' %}" > &#x1F3E0 </a></td>
+                    </tr>
+                </table>
+            </br>
+        </br>
+   
+
+                    <table align = center>
+                    <tr>
+                      
+                       <td>
+                        <td style = "font-family: monospace;">Select a System Code:</td>
+                        <td> </td>
+                        <td><input list = "systemcodes" placeholder="System Code"  name = "syscode" > </td>
+                        <datalist id="systemcodes">
+                         
+                          <option >S1VE</option>
+                          <option >S1VE-TCR</option>
+                          <option>S1VE-TCR-FSK</option>
+                           
+                          <option> S1VE-TCR-FSK-USH</option>
+                          
+                          <option > S1VE-TCR-ASK</option>
+                          
+                          <option> S1VE-TCR-ASK</option>
+                         <option>S1VE-TCR-TSF</option> 
+                           <option>S1VE-TCR-PMD
+                          </option>
+                            <option>S1VE-TCR-PMD-AVX
+                          </option>
+                          <option>S1VE-TCR-PMD-FLR
+                          </option>
+                          <option> S1VE-TCR-SNS
+                          </option>
+                          <option > S1VE-TCR-SNS-LVL
+                          </option>
+                          <option > S1VE-TCR-SNS-PTS
+          
+                          </option>
+                          <option > S1VE-TCR-SNS-AUX
+                          </option>
+                          <option > S1VE-TCR-ITP
+                          </option>
+                          <option > S1VE-TFM
+                          </option>
+                          <option > S1VE-TFM-STR
+                          </option>
+                          <option > S1VE-TFM-REL
+                          </option>
+                          <option > S1VE-TFM-USH
+                          </option>
+                          <option > S1VE-TFM-SST
+                          </option>
+                          <option > S1VE-TFM-SST
+                          </option>
+                          <option > S1VE-TFM-SST-USS
+                          </option>
+                          <option > S1VE-TFM-VAC
+                          </option>
+                          <option > S1VE-TFM-VAC-USV
+                          </option>
+                          <option > S1VE-PRS
+                          </option>
+                          <option > S1VE-PRS-REG
+                          </option>
+                          <option > S1VE-PRS-RLF
+                          </option>
+                          <option > S1VE-PRS-RLF-ACT
+                          </option>
+                          <option > S1VE-PRS-RLF-300
+                          </option>
+                          <option > S1VE-PRS-RLF-300
+                          </option>
+                          <option >S1VE-PRS-THP
+                          </option>
+                          <option >S1VE-PRS-THP-HES
+                          </option>
+                          <option >S1VE-PRS-THP-SNS
+                          </option>
+                          <option >S1VE-PRS-THP-USG
+                          </option>
+                          <option >S1VE-PLS
+                          </option>
+                          <option >S1VE-PLS-USC
+                          </option>
+                          <option >S1VE-PLS-USR
+                          </option>
+                          <option >S1VE-PLS-MCV
+                          </option>
+                          <option >S1VE-SEP
+                          </option>
+                          <option >S1VE-SEP-ACT
+                          </option>
+                          <option >S1VE-SEP-REC
+                          </option>
+                          <option >S1VE-SEP-PHR
+                          </option>
+                          <option >S1VE-RVY
+                          </option>
+                          <option >S2VE
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR-STR
+                          </option>
+                          <option >S2VE-TCR-BSF
+                          </option>
+                          <option >S2VE-TCR-TSF
+                          </option>
+                          <option >S2VE-TCR-PMD
+                          </option>
+                          <option >S2VE-TCR-PMD
+                          </option>
+                          <option >S2VE-TCR-PMD-ASL
+                          </option>
+                          <option >S2VE-TCR-PMD-AVX
+                          </option>
+                          <option >S2VE-TCR-PMD-FLR
+                          </option>
+                          <option >S2VE-TCR-SNS
+                          </option>
+                          <option >S2VE-TCR-SNS-LVL
+                          </option>
+                          <option >S2VE-TCR-SNS-PTS
+                          </option>
+                          <option >S2VE-TCR-SNS-AUX
+                          </option>
+                          <option >S2VE-TCR-ITP
+                          </option>
+                          <option >S2VE-TCR-TFM
+                          </option>
+                          <option >S2VE-TCR-CNE
+                          </option>
+                          <option >S2VE-PRS
+                          </option>
+                          <option >S2VE-PRS-REG
+                          </option>
+                          <option >S2VE-PRS-RLF
+                          </option>
+                          <option >S2VE-PRS-THP
+                          </option>
+                          <option >S2VE-PRS-THP-HES
+                          </option>
+                          <option >S2VE-PRS-THP-SNS
+                          </option>
+                          <option >S2VE-PRS-THP-USG
+                          </option>
+                          <option >S2VE-PLS
+                          </option>
+                          <option >S2VE-PLS-USC
+                          </option>
+                          <option >S2VE-PLS-USR
+                          </option>
+                          <option >S2VE-PLS-MCV
+                          </option>
+                          <option >S2VE-SEP
+                          </option>
+                          <option >S2VE-SEP-ACT
+                          </option>
+                          <option >S2VE-SEP-REC
+                          </option>
+                          <option >S2VE-SEP-PHR
+                          </option>
+                          <option >S2VE-RCS
+                          </option>
+                          <option >S2VE-RCS-USG
+                          </option>
+                          <option >S2VE-SST
+                          </option>
+                          <option >S3VE
+                          </option>
+                          <option >S3VE
+                          </option>
+                          <option >S3VE-KST
+                          </option>
+                          <option >S3VE-KST-STR
+                          </option>
+                          <option >S3VE-KST-SAB
+                          </option>
+                          <option >S3VE-KST-TNK
+                          </option>
+                          <option >S3VE-KST-TNK
+                          </option>
+                          <option >S3VE-KST-TNK-PMD
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-ASL
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-AVX
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-FLR
+                          </option>
+                          <option >S3VE-KST-HES
+                          </option>
+                          <option >S3VE-KST-SNS
+                          </option>
+                          <option >S3VE-KST-USS
+                          </option>
+                          <option >S3VE-KST-USG
+                          </option>
+                          <option >S3VE-KST-ITP
+                          </option>
+                          <option >S3VE-SEP
+                          </option>
+                          <option >S3VE-SEP-ACT
+                          </option>
+                          <option >S3VE-SEP-REC
+                          </option>
+                          <option >S3VE-SEP-PHR
+                          </option>
+                          <option >S3VE-RCS
+                          </option>
+                          <option >S3VE-RCS-USG
+                          </option>
+                          <option >S3VE-DSP
+                          </option>
+                          <option >S3VE-FRG
+                          </option>
+                          <option >S3VE-FRG-STR
+                          </option>
+                          <option >S3VE-FRG-FLR
+                          </option>
+                          <option >S3VE-FRG-SNS
+                          </option>
+                          <option >S3VE-FRG-ITP
+                          </option>
+                          <option >S3VE-FRG-USH
+                          </option>
+                          <option >S3VE-FRG-SEP
+                          </option>
+                          <option >S3VE-FRG-SEP-ACT
+                          </option>
+                          <option >S3VE-FRG-SEP-REC
+                          </option>
+                          <option >S3VE-FRG-SEP-PHR
+                          </option>
+                          <option >S1PR
+                          </option>
+                          <option >S1PR-E01
+                          </option>
+                          <option >S1PR-E01-TCA
+                          </option>
+                          <option >S1PR-E01-TPU
+                          </option>
+                          <option >S1PR-E01-TPU-PMP
+                          </option>
+                          <option >S1PR-E01-TPU-CLT
+                          </option>
+                          <option >S1PR-E01-TPU-SEL
+                          </option>
+                          <option >S1PR-E01-TPU-TUR
+                          </option>
+                          <option >S1PR-E01-TPU-GGU
+                          </option>
+                          <option >S1PR-E01-TPU-IGN
+                          </option>
+                          <option >S1PR-E01-TPU-SSS
+                          </option>
+                          <option >S1PR-E01-TPU-BOV
+                          </option>
+                          <option >S1VE-PRS-RLF-200 
+                          </option>
+                          <option >S1PR-E01-TPU-SEN 
+                          </option>
+                          <option >S1PR-E02 
+                          </option>
+                          <option >S1PR-E02-SLE 
+                          </option>
+                          <option >S1PR-E02-RDF 
+                          </option>
+                          <option >S1PR-E02-0GA 
+                          </option>
+                          <option >S1PR-E02-0GA-IGN 
+                          </option>
+                          <option >S1PR-E02-0GA-GDT 
+                          </option>
+                          <option >S1PR-E02-0GA-GDT-RDF 
+                          </option>
+                          <option >S1PR-E02-0GA-SNS 
+                          </option>
+                          <option >S1PR-E02-0GA-OXL 
+                          </option>
+                          <option >S1PR-E02-0GA-OXL-APD 
+                          </option>
+                          <option >S1PR-E02-0GA-GEJ 
+                          </option>
+                          <option >S1PR-E02-0GA-PVC 
+                          </option>
+                          <option >S1PR-E02-0GA-FUL 
+                          </option>
+                          <option >S1PR-E02-0GA-SST 
+                          </option>
+                          <option >S1PR-E02-0GA-PUL 
+                          </option>
+                          <option >S1PR-E02-0GA-HTS 
+                          </option>
+                          <option >S1PR-E02-0GA-MTH 
+                          </option>
+                          <option >S1PR-E02-0GA-PRS 
+                          </option>
+                          <option >S1PR-E02-1EC 
+                          </option>
+                          <option >S1PR-E02-1EC-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-MIX 
+                          </option>
+                          <option >S1PR-E02-1EC-MIX-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-TCA 
+                          </option>
+                          <option >S1PR-E02-1EC-TCA-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-2TP 
+                          </option>
+                          <option >S1PR-E02-2TP-OXP 
+                          </option>
+                          <option >S1PR-E02-2TP-FUP 
+                          </option>
+                          <option >S1PR-E02-2TP-TUM 
+                          </option>
+                          <option >S1PR-E02-2TP-TUM-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB 
+                          </option>
+                          <option >S1PR-E02-3PB-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-MIX 
+                          </option>
+                          <option >S1PR-E02-3PB-MIX-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-TCA 
+                          </option>
+                          <option >S1PR-E02-3PB-TCA-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-IGN 
+                          </option>
+                          <option >S1PR-E02-3PB-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU 
+                          </option>
+                          <option >S1PR-E02-4CU-401 
+                          </option>
+                          <option >S1PR-E02-4CU-402 
+                          </option>
+                          <option >S1PR-E02-4CU-402-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-403 
+                          </option>
+                          <option >S1PR-E02-4CU-403-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-404 
+                          </option>
+                          <option >S1PR-E02-4CU-405 
+                          </option>
+                          <option >S1PR-E02-4CU-405-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-406 
+                          </option>
+                          <option >S1PR-E02-4CU-407 
+                          </option>
+                          <option >S1PR-E02-4CU-407-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-408 
+                          </option>
+                          <option >S1PR-E02-4CU-408-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-409 
+                          </option>
+                          <option >S1PR-E02-4CU-410 
+                          </option>
+                          <option >S1PR-E02-4CU-410-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-411 
+                          </option>
+                          <option >S1PR-E02-4CU-FTS 
+                          </option>
+                          <option >S1PR-E02-4CU-COX 
+                          </option>
+                          <option >S1PR-E02-ECU 
+                          </option>
+                          <option >S1PR-E02-TVC 
+                          </option>
+                          <option >S1PR-E02-TVC-ACT 
+                          </option>
+                          <option >S1PR-E02-TVC-PWR 
+                          </option>
+                          <option >S1PR-E02-TVC-GIM 
+                          </option>
+                          <option >S1PR-E02-TVC-MTH 
+                          </option>
+                          <option >S1PR-E02-AUX 
+                          </option>
+                          <option >S1PR-E02-AUX-RDF 
+                          </option>
+                          <option >S2PR 
+                          </option>
+                          <option >S2PR-E02 
+                          </option>
+                          <option >S2PR-E02-AUX 
+                          </option>
+                          <option >S2PR-E02-NEX 
+                          </option>
+                          <option >S3PR 
+                          </option>
+                          <option >S3PR-K01 
+                          </option>
+                          <option >S3PR-K01-TCA 
+                          </option>
+                          <option >S3PR-K01-TCA-IGN 
+                          </option>
+                          <option >S3PR-K01-TCA-INJ 
+                          </option>
+                          <option >S3PR-K01-TCA-TCH 
+                          </option>
+                          <option >S3PR-K01-TRV 
+                          </option>
+                          <option >S3PR-K01-TVC 
+                          </option>
+                          <option >S1AV 
+                          </option>
+                          <option >S1AV-NDE 
+                          </option>
+                          <option >S1AV-NDE-N01 
+                          </option>
+                          <option >S1AV-COM 
+                          </option>
+                          <option >S1AV-PWR 
+                          </option>
+                          <option >S1AV-PWR-BAT 
+                          </option>
+                          <option >S1AV-FTS 
+                          </option>
+                          <option >S1AV-EUS 
+                          </option>
+                          <option >S1AV-EUS-GRD 
+                          </option>
+                          <option >S1AV-EUS-GRD-COM 
+                          </option>
+                          <option >S1AV-EUS-GRD-PWR 
+                          </option>
+                          <option >S1AV-EUS-INT 
+                          </option>
+                          <option >S1AV-EUS-INT-COM 
+                          </option>
+                          <option >S1AV-EUS-INT-PWR 
+                          </option>
+                          <option >S1AV-WRG 
+                          </option>
+                          <option >S1AV-RTS 
+                          </option>
+                          <option >S1AV-RVY 
+                          </option>
+                          <option >S2AV 
+                          </option>
+                          <option >S2AV-NDE 
+                          </option>
+                          <option >S2AV-COM 
+                          </option>
+                          <option >S2AV-PWR 
+                          </option>
+                          <option >S2AV-FTS 
+                          </option>
+                          <option >S2AV-EUS 
+                          </option>
+                          <option >S2AV-WRG 
+                          </option>
+                          <option >S3AV 
+                          </option>
+                          <option >S3AV-NAV 
+                          </option>
+                          <option >S3AV-NAV-TSO 
+                          </option>
+                          <option >S3AV-NAV-SIM 
+                          </option>
+                          <option >S3AV-NAV-INS 
+                          </option>
+                          <option >S3AV-RFS 
+                          </option>
+                          <option >S3AV-FCS 
+                          </option>
+                          <option >S3AV-NDE 
+                          </option>
+                          <option >S3AV-COM 
+                          </option>
+                          <option >S3AV-PWR 
+                          </option>
+                          <option >S3AV-EUS 
+                          </option>
+                          <option >S3AV-WRG 
+                          </option>
+                          <option >GRND-3DP 
+                          </option>
+                          <option >GRND-3DP-MRO 
+                          </option>
+                          <option >GRND-VAC 
+                          </option>
+                          <option >GRND-EN1 
+                          </option>
+                          <option >GRND-EN1-MRO 
+                          </option>
+                          <option >GRND-SHK 
+                          </option>
+                          <option >GRND-SHK-MRO 
+                          </option>
+                          <option >GRND-ELC 
+                          </option>
+                          <option >GRND-HPH 
+                          </option>
+                          <option >GRND-HPH-MRO 
+                          </option>
+                          <option >GRND-NM1 
+                          </option>
+                          <option >GRND-NM1-DAQ 
+                          </option>
+                          <option >GRND-NM1-MRO 
+                          </option>
+                          <option >GRND-TPU 
+                          </option>
+                          <option >GRND-TPU-TRG 
+                          </option>
+                          <option >GRND-TPU-TRG-MRO 
+                          </option>
+                          <option >GRND-TPU-PTR 
+                          </option>
+                          <option >GRND-TPU-PTR-MRO 
+                          </option>
+                          <option >GRND-TPU-STR 
+                          </option>
+                          <option >GRND-TPU-STR-MRO 
+                          </option>
+                          <option >GRND-TPU-MRO 
+                          </option>
+                          <option >GRND-HIL 
+                          </option>
+                          <option >GRND-HIL-SCE 
+                          </option>
+                          <option >GRND-HIL-MRO 
+                          </option>
+                          <option >GRND-INS 
+                          </option>
+                          <option >GRND-INS-MRO 
+                          </option>
+                          <option >GRND-INS 
+                          </option>
+                          <option >GRND-INS-MRO 
+                          </option>
+                          <option >GRND-CRS 
+                          </option>
+                          <option >GRND-TS1 
+                          </option>
+                          <option >GRND-TS1-HTS 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1-PFT 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1-PWP 
+                          </option>
+                          <option >GRND-TS1-HTS-MRO 
+                          </option>
+                          <option >GRND-TS1-VTS 
+                          </option>
+                          <option >GRND-TS1-VTS-IEQ 
+                          </option>
+                          <option >GRND-TS1-VTS-IST 
+                          </option>
+                          <option >GRND-TS1-VTS-MRO 
+                          </option>
+                          <option >GRND-TS1-HTX 
+                          </option>
+                          <option >GRND-TS1-HTX-MRO 
+                          </option>
+                          <option >GRND-TS1-MRO
+                          </option>
+                          <option >GRND-TAS
+                          </option>
+                          <option >GRND-TAS-SWG
+                          </option>
+                          <option >GRND-TAS-SWG-MRO
+                          </option>
+                          <option >GRND-TAS-SG1
+                          </option>
+                          <option >GRND-TAS-SG1-MRO
+                          </option>
+                          <option >GRND-TAS-SG2
+                          </option>
+                          <option >GRND-TAS-SG2-MRO
+                          </option>
+                          <option >GRND-TAS-MRO
+                          </option>
+                          <option >GRND-TVC
+                          </option>
+                          <option >GRND-TVC-LDB
+                          </option>
+                          <option >GRND-TVC-MRO
+                          </option>
+                          <option >GRND-INT
+                          </option>
+                          <option >GRND-INT-MRO
+                          </option>
+                          <option >GRND-HY1
+                          </option>
+                          <option >GRND-HY1-HST
+                          </option>
+                          <option >GRND-HY1-HST-MRO
+                          </option>
+                          <option >GRND-HY1-CTN
+                          </option>
+                          <option >GRND-HY1-CTN-MRO
+                          </option>
+                          <option >GRND-HY1-CLN
+                          </option>
+                          <option >GRND-HY1-CLN-MRO
+                          </option>
+                          <option >GRND-HY1-MRO
+                          </option>
+                          <option >GRND-HFR
+                          </option>
+                          <option >GRND-HFR-MRO
+                          </option>
+                          <option >GRND-BST
+                          </option>
+                          <option >GRND-BST-MRO
+                          </option>
+                          <option >GRND-INJ
+                          </option>
+                          <option >GRND-INJ-MRO
+                          </option>
+                          <option >GRND-STR
+                          </option>
+                          <option >GRND-STR-VE1
+                          </option>
+                          <option >GRND-STR-VE1-MRO
+                          </option>
+                          <option >GRND-STR-REL
+                          </option>
+                          <option >GRND-STR-REL-MRO
+                          </option>
+                          <option >GRND-STR-SEP
+                          </option>
+                          <option >GRND-STR-SEP-MRO
+                          </option>
+                          <option >GRND-STR-FRG
+                          </option>
+                          <option >GRND-STR-FRG-MRO
+                          </option>
+                          <option >GRND-STR-COM
+                          </option>
+                          <option >GRND-STR-COM-MRO
+                          </option>
+                          <option >GRND-STR-KST
+                          </option>
+                          <option >GRND-STR-KST-MRO
+                          </option>
+                          <option >GRND-STR-MRO
+                          </option>
+                          <option >GRND-SNS
+                          </option>
+                          <option >GRND-SNS-PSS
+                          </option>
+                          <option >GRND-SNS-MRO
+                          </option>
+                          <option >GRND-PDT
+                          </option>
+                          <option >GRND-PDT-MRO
+                          </option>
+                          <option >GRND-SLT
+                          </option>
+                          <option >GRND-SLT-IST
+                          </option>
+                          <option >GRND-SLT-OST
+                          </option>
+                          <option >GRND-SLT-OST-PMD
+                          </option>
+                          <option >GRND-SLT-OST-PMD-ASL
+                          </option>
+                          <option >GRND-SLT-OST-PMD-AVX
+                          </option>
+                          <option >GRND-SLT-OST-PMD-FLR
+                          </option>
+                          <option >GRND-SLT-IST
+                          </option>
+                          <option >GRND-SLT-OST
+                          </option>
+                          <option >GRND-SLT-HEX
+                          </option>
+                          <option >GRND-FUR
+                          </option>
+                          <option >GRND-FUR-MRO
+                          </option>
+                          <option >GRND-PST
+                          </option>
+                          <option >GRND-PST-MRO
+                          </option>
+                          <option >GRND-PHS
+                          </option>
+                          <option >GRND-PHS-MRO
+                          </option>
+                          <option >GRND-PD2
+                          </option>
+                          <option >GRND-PD2-MRO
+                          </option>
+                          <option >FCLY-WS1
+                          </option>
+                          <option >FCLY-WS1-CON
+                          </option>
+                          <option >FCLY-WS1-PPE
+                          </option>
+                          <option >FCLY-WS2
+                          </option>
+                          <option >FCLY-WS2-REL
+                          </option>
+                          <option >FCLY-WS2-OFF
+                          </option>
+                          <option >FCLY-WS2-PRO
+                          </option>
+                          <option >FCLY-WS2-CON
+                          </option>
+                          <option >FCLY-WS2-PPE
+                          </option>
+                          <option >FCLY-WS2-CLN
+                          </option>
+                          <option >FCLY-WS2-ELC
+                          </option>
+                          <option >FCLY-WS2-TST
+                          </option>
+                          <option >FCLY-WS2-MAC
+                          </option>
+                          <option >FCLY-WS2-MAC-MRO
+                          </option>
+                          <option >FCLY-WSP
+                          </option>
+                          <option >FCLY-WSP-OFF
+                          </option>
+                          <option >FCLY-WSP-PRO
+                          </option>
+                          <option >FCLY-WSP-CON
+                          </option>
+                          <option >FCLY-WSP-PPE
+                          </option>
+                          <option >FCLY-IT 
+                          </option>
+                          <option >FCLY-IT-USR  
+                          </option>
+                          <option >FCLY-IT-ITI   
+                          </option>
+                          <option >FCLY-SSC   
+                          </option>
+                          <option >FCLY-C1    
+                          </option>
+                          <option >FCLY-TC1   
+                          </option>
+                          <option >FCLY-MCC  
+                          </option>
+                          <option >FCLY-MCC-MCS  
+                          </option>
+                          <option >BDSM-MKT  
+                          </option>
+                          <option >BDSM-MKT-EVT  
+                          </option>
+                          <option >BDSM-MKT-WEB  
+                          </option>
+                          <option >BDSM-MKT-SMX 
+                          </option>
+                          <option >BDSM-MKT-SYM 
+                          </option>
+                          <option >BDSM-SAL 
+                          </option>
+                          <option >BDSM-SAL-AST 
+                          </option>
+                          <option >BDSM-SAL-RAY 
+                          </option>
+                          <option >BDSM-SAL-OSE 
+                          </option>
+                          <option >BDSM-SAL-CLS
+                          </option>
+                          <option >BDSM-SAL-OIT
+                          </option>
+                          <option >BDSM-SAL-AST
+                          </option>
+                          <option >BDSM-SAL-PIM
+                          </option>
+                          <option >BDSM-SAL-PUG
+                          </option>
+                          <option >BDSM-BDX
+                          </option>
+                          <option >BDSM-BDX-ESA
+                          </option>
+                          <option >BDSM-BDX-ESA-LCA
+                          </option>
+                          <option >BDSM-BDX-ESA-CST
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP1
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP2
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP3
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-FP1
+                          </option>
+                          <option >BDSM-BDX-ESA-PD2
+                          </option>
+                          <option >BDSM-BDX-ESA-FAM
+                          </option>
+                          <option >BDSM-BDX-EMS
+                          </option>
+                          <option >BDSM-BDX-MCS
+                          </option>
+                          <option >BDSM-BDX-BAY
+                          </option>
+                          <option >BDSM-BDX-NMO
+                          </option>
+                          <option >BDSM-BDX-NMO-UM2
+                          </option>
+                          <option >BDSM-BDX-NMO-EL3
+                          </option>
+                          <option >BDSM-BDX-KSP
+                          </option>
+                          <option >BDSM-BDX-BJS
+                          </option>
+                          <option >BDSM-BDX-F9X
+                          </option>
+                          <option >BDSM-BDX-RAF
+                          </option>
+                          <option >BDSM-BDX-RAF-TPB
+                          </option>
+                          <option >BDSM-BDX-RAF-CCT
+                          </option>
+                          <option >BDSM-BDX-RAF-NAM
+                          </option>
+                          <option >BDSM-BDX-RAF-CBP
+                          </option>
+                          <option >BDSM-BDX-RAF-REM
+                          </option>
+                          <option >BDSM-BDX-EUC
+                          </option>
+                          <option >BDSM-BDX-EUC-LCL
+                          </option>
+                          <option >BDSM-BDX-EUC-HEU
+                          </option>
+                          <option >BDSM-BDX-EUC-ETP
+                          </option>
+                          <option >BDSM-BDX-EUC-SCI
+                          </option>
+                          <option >BDSM-BDX-AIC
+                          </option>
+                          <option >FDPT-ESA
+                          </option>
+                          <option >FDPT-ESA-LCA
+                          </option>
+                          <option >FDPT-ESA-CST
+                          </option>
+                          <option >FDPT-ESA-CST-FSD
+                          </option>
+                          <option >FDPT-ESA-CST-OSD
+                          </option>
+                          <option >FDPT-ESA-NST
+                          </option>
+                          <option >FDPT-NMO
+                          </option>
+                          <option >FDPT-NMO-UM2
+                          </option>
+                          <option >FDPT-EMS
+                          </option>
+                          <option >FDPT-MCS
+                          </option>
+                          <option >FDPT-KSP
+                          </option>
+                          <option >FDPT-AWO
+                          </option>
+                          <option >FDPT-AIC
+                          </option>
+                          <option >C1
+                          </option>
+                          <option >C1AZ
+                          </option>
+                          <option >C1AZ-PAD
+                          </option>
+                          <option >C1AZ-PAD-GAS
+                          </option>
+                          <option >C1AZ-PAD-LOX
+                          </option>
+                          <option >C1AZ-PAD-LN2
+                          </option>
+                          <option >C1AZ-PAD-AIF
+                          </option>
+                          <option >C1AZ-PAD-WDS
+                          </option>
+                          <option >C1AZ-PAD-UM1
+                          </option>
+                          <option >C1AZ-PAD-LPS
+                          </option>
+                          <option >C1AZ-PAD-ERC
+                          </option>
+                          <option >C1AZ-PAD-IXF
+                          </option>
+                          <option >C1AZ-PAD-IXF-FSP
+                          </option>
+                          <option >C1AZ-GRY
+                          </option>
+                          <option >C1AZ-SEA
+                          </option>
+                          <option >C1AZ-DGS
+                          </option>
+                          <option >C1AZ-FLY
+                          </option>
+                          <option >C1AZ-OPS
+                          </option>
+                          <option >C1AZ-LCC
+                          </option>
+                          <option >C1AZ-SLV
+                          </option>
+                          <option >C1AZ-LOG
+                          </option>
+                          <option >C1NO
+                          </option>
+                          <option >C1NO-FLY
+                          </option>
+                          <option >C1AZ-OPS
+                          </option>
+                          <option >C1AZ-LCC
+                          </option>
+                          <option >C1AZ-SLV
+                          </option>
+                          <option >C1AZ-LOG
+                          </option>
+                          <option >C1NO
+                          </option>
+                          <option >C1NO-FLY
+                          </option>
+                          <option >C1NO-PAD
+                          </option>
+                          <option >C1NO-LIC
+                          </option>
+                          <option >C1NO-IXF
+                          </option>
+                          <option >C2FR
+                          </option>
+                          <option >C2FR-FLY
+                          </option>
+                          <option >C2FR-OPS
+                          </option>
+                          <option >C2FR-GRY
+                          </option>
+                          <option >C4CA
+                          </option>
+                          <option >C5DE
+                          </option>
+                          <option >C6OM
+                          </option>
+                          <option >C7UK
+                          </option>
+                          <option >Management
+                          </option>
+                          <option >IT
+                          </option>
+                      </datalist>
+
+                        <td>
+                            <input type = "submit"
+                            value ="Predict"
+                            name = "predict"
+                            class="btn btn-outline-success"
+                            style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                        </td>
+                       <td style = "width: 5%"></td>
+                        <td style = "font-family: monospace;">
+                          The forecast for the System Code {{syscode}} for the year {{year}} is: <b class ="myDIV">{{predictions}}</b>  (A cumulative Prediction)
+                      </td>
+                    
+                  
+
+                    </tr>
+                </table>
+            </br>
+    
+   
+               
+              <table>
+                <tr>
+                <td style="font-family: monospace;">Estimated Range: <b class ="myDIV">{{lower}}</b> - <b class ="myDIV">{{upper}}</b>  (Heavily depends on the selected Tolerance value: <b>{{tolerance}}</b>)</td>
+                </tr>
+              </table>
+              <hr>
+              <h5 style="font-family:monospace"> <b> Time Series Forcasting (SARIMAX Model) </b></h5>
+           
+
+              <table align = center>
+                <tr>
+                 
+                  <td> <div class="slidecontainer" style = "font-family: monospace;">
+                    <input type="range" min="15" max="{{max}}" value = "15" step="1" id = "myRange6" name = 'initializer' >
+              
+                    Initializer: <span id="demo6"></span>
+                
+                  </div> 
+                  <script>
+                    var slider6 = document.getElementById("myRange6");
+                    var output6 = document.getElementById("demo6");
+                    output6.innerHTML = slider6.value;
+                    
+                    slider6.oninput = function() {
+                      output6.innerHTML = this.value;
+                    }
+                    </script>
+                </td>
+                
+              
+                <td style = "width: 4%"></td>
+                <td> <div class="slidecontainer" style = "font-family: monospace;">
+                 <input type="range" min="1" max="12" value = "8" step="1" id = "myRange3" name = 'seasonal' >
+           
+                 Seasonal&nbspComponent:&nbsp<span id="demo3"></span>&nbsp
+             
+               </div> 
+               <script>
+                 var slider3 = document.getElementById("myRange3");
+                 var output3 = document.getElementById("demo3");
+                 output3.innerHTML = slider3.value;
+                 
+                 slider3.oninput = function() {
+                   output3.innerHTML = this.value;
+                 }
+                 </script>
+             </td>
+
+             <td style = "width: 4%" ></td>
+             <td> <div class="slidecontainer" style = "font-family: monospace;">
+              <input type="range" min="1" max="108" value = "24" step="1" id = "myRange4" name = 'duration' >
+        
+              Predict&nbspfor:&nbsp<span id="demo4"></span>:&nbspmonths&nbsp
+          
+            </div> 
+            <script>
+              var slider4 = document.getElementById("myRange4");
+              var output4 = document.getElementById("demo4");
+              output4.innerHTML = slider4.value;
+              
+              slider4.oninput = function() {
+                output4.innerHTML = this.value;
+              }
+              </script>
+          </td>
+
+
+          <td style = "width: 4%" style = "font-family: monospace;"></td>
+          <td> <div class="slidecontainer" style = "font-family: monospace;">
+           <input type="range" min="50000" max="500000" value = "300000" step="50000" id = "myRange5" name = 'tolerance2' >
+     
+           Tolerance:&nbsp<span id="demo5"></span> 
+       
+         </div> 
+         <script>
+           var slider5 = document.getElementById("myRange5");
+           var output5 = document.getElementById("demo5");
+           output5.innerHTML = slider5.value;
+           
+           slider5.oninput = function() {
+             output5.innerHTML = this.value;
+           }
+           </script>
+       </td>
+  
+       <td style = "width: 15%"></td>
+                         
+                         <td>
+                            <input type = "submit"
+                            value ="Forecast"
+                            name = "forecast"
+                            class="btn btn-outline-success"
+                            style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                        </td>
+                        
+                        <td style = "width: 5%">        </td>
+                        <td style = "font-family: monospace;"> &nbsp&nbspTest&nbspAccuracy: </td>
+                        <td style = "font-family: monospace;"> <span> {{accuracy2}}</span></td>
+                        <td> %&nbsp&nbsp</td>
+                        <td style = "width: 5%">        </td>
+                        <td style = "font-family: monospace;"> Till: </td>
+                        <td style = "font-family: monospace;">  <span> {{selected_period}}</span>  </td>
+                        <td style = "width: 10%">        </td>
+
+
+
+          
+
+                </tr>
+
+              </table style = "font-family: monospace;">
+            </br>
+              <div style = " height: 90px; width: 500px; overflow: auto; "  id= "fixTableHead">
+              <table align = center border =1  class = "table table-hover table-sm table-bordered" style = "font-family: monospace;">
+
+                <thead>
+                  <tr>
+                    <th style = "position:sticky; top: 0; background:#eee; ">Month</th>
+                    
+                    <th style = "position:sticky; top: 0; background:#eee; ">Forecasted Expenditure </th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% if pred_data %}  
+                {% for rows in pred_data %}
+                  <tr>
+                    <td >{{rows.index}}</td>
+                    
+                    <td class ="myDIV">{{rows.forecast}}</td>
+                  </tr>
+                {% endfor %}
+                {% endif %}
+                </tbody>
+
+              </table>
+
+         
+              </div>
+            </br>
+              <p style = "font-family: monospace;"> The Predicted Total expenditure for the Launch Vehicle till the selected period is: <b class ="myDIV">{{total_expenditure}}</b>  &nbsp(Estimated range: <b class ="myDIV">{{lower_predict}}</b> - <b class ="myDIV">{{upper_predict}}</b>  for Tolerance: <b>{{tolerance2}}</b>)  &nbsp &nbsp  Remnant Expenditure: <b class ="myDIV">{{remnant_expenditure}}</b>  (Last SC: {{seasonal}},  Last Initializer: {{initializer}} )
+
+              </p>
+<table>
+  <tr>
+            <td style = "width: 4%"></td>
+          <td> <div class="slidecontainer" style = "font-family: monospace;">
+           <input type="range" min="10" max="{{max2}}" value = "20" step="1" id = "myRange14" name = 'initializer2' >
+     
+           Initializer:&nbsp<span id="demo14"></span> 
+       
+         </div> 
+         <script>
+           var slider14 = document.getElementById("myRange14");
+           var output14 = document.getElementById("demo14");
+           output14.innerHTML = slider14.value;
+           
+           slider14.oninput = function() {
+             output14.innerHTML = this.value;
+           }
+           </script>
+           </td>
+
+
+           <td style = "width: 8%"></td>
+                <td> <div class="slidecontainer" style = "font-family: monospace;">
+                 <input type="range" min="1" max="12" value = "8" step="1" id = "myRange15" name = 'seasonal2' >
+           
+                 Seasonal&nbspComponent:&nbsp<span id="demo15"></span>
+             
+               </div> 
+               <script>
+                 var slider15 = document.getElementById("myRange15");
+                 var output15 = document.getElementById("demo15");
+                 output15.innerHTML = slider15.value;
+                 
+                 slider15.oninput = function() {
+                   output15.innerHTML = this.value;
+                 }
+                 </script>
+             </td>
+
+
+
+             <td style = "width: 8%"></td>
+             <td> <div class="slidecontainer" style = "font-family: monospace;">
+              <input type="range" min="1" max="108" value = "24" step="1" id = "myRange16" name = 'duration2' >
+        
+              Predict&nbspfor:&nbsp<span id="demo16"></span>&nbspmonths
+          
+            </div> 
+            <script>
+              var slider16 = document.getElementById("myRange16");
+              var output16 = document.getElementById("demo16");
+              output16.innerHTML = slider16.value;
+              
+              slider16.oninput = function() {
+                output16.innerHTML = this.value;
+              }
+              </script>
+          </td>
+
+             <td style = "width: 10%"></td>
+
+                         <td>
+                            <input type = "submit"
+                            value ="Generate System Code level Forecast"
+                            name = "generate"
+                            class ="btn btn-outline-warning"
+                            style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                        </td>
+
+
+                        <td style = "width: 12%">        </td>
+                     
+                        <td><input list = "systemcodes2"  placeholder="System Code"  name = "system_code00" > </td>
+                        <datalist id="systemcodes2">
+                         
+                          <option >S1VE</option>
+                          <option >S1VE-TCR</option>
+                          <option>S1VE-TCR-FSK</option>
+                           
+                          <option> S1VE-TCR-FSK-USH</option>
+                          
+                          <option > S1VE-TCR-ASK</option>
+                          
+                          <option> S1VE-TCR-ASK</option>
+                         <option>S1VE-TCR-TSF</option> 
+                           <option>S1VE-TCR-PMD
+                          </option>
+                            <option>S1VE-TCR-PMD-AVX
+                          </option>
+                          <option>S1VE-TCR-PMD-FLR
+                          </option>
+                          <option> S1VE-TCR-SNS
+                          </option>
+                          <option > S1VE-TCR-SNS-LVL
+                          </option>
+                          <option > S1VE-TCR-SNS-PTS
+          
+                          </option>
+                          <option > S1VE-TCR-SNS-AUX
+                          </option>
+                          <option > S1VE-TCR-ITP
+                          </option>
+                          <option > S1VE-TFM
+                          </option>
+                          <option > S1VE-TFM-STR
+                          </option>
+                          <option > S1VE-TFM-REL
+                          </option>
+                          <option > S1VE-TFM-USH
+                          </option>
+                          <option > S1VE-TFM-SST
+                          </option>
+                          <option > S1VE-TFM-SST
+                          </option>
+                          <option > S1VE-TFM-SST-USS
+                          </option>
+                          <option > S1VE-TFM-VAC
+                          </option>
+                          <option > S1VE-TFM-VAC-USV
+                          </option>
+                          <option > S1VE-PRS
+                          </option>
+                          <option > S1VE-PRS-REG
+                          </option>
+                          <option > S1VE-PRS-RLF
+                          </option>
+                          <option > S1VE-PRS-RLF-ACT
+                          </option>
+                          <option > S1VE-PRS-RLF-300
+                          </option>
+                          <option > S1VE-PRS-RLF-300
+                          </option>
+                          <option >S1VE-PRS-THP
+                          </option>
+                          <option >S1VE-PRS-THP-HES
+                          </option>
+                          <option >S1VE-PRS-THP-SNS
+                          </option>
+                          <option >S1VE-PRS-THP-USG
+                          </option>
+                          <option >S1VE-PLS
+                          </option>
+                          <option >S1VE-PLS-USC
+                          </option>
+                          <option >S1VE-PLS-USR
+                          </option>
+                          <option >S1VE-PLS-MCV
+                          </option>
+                          <option >S1VE-SEP
+                          </option>
+                          <option >S1VE-SEP-ACT
+                          </option>
+                          <option >S1VE-SEP-REC
+                          </option>
+                          <option >S1VE-SEP-PHR
+                          </option>
+                          <option >S1VE-RVY
+                          </option>
+                          <option >S2VE
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR
+                          </option>
+                          <option >S2VE-TCR-STR
+                          </option>
+                          <option >S2VE-TCR-BSF
+                          </option>
+                          <option >S2VE-TCR-TSF
+                          </option>
+                          <option >S2VE-TCR-PMD
+                          </option>
+                          <option >S2VE-TCR-PMD
+                          </option>
+                          <option >S2VE-TCR-PMD-ASL
+                          </option>
+                          <option >S2VE-TCR-PMD-AVX
+                          </option>
+                          <option >S2VE-TCR-PMD-FLR
+                          </option>
+                          <option >S2VE-TCR-SNS
+                          </option>
+                          <option >S2VE-TCR-SNS-LVL
+                          </option>
+                          <option >S2VE-TCR-SNS-PTS
+                          </option>
+                          <option >S2VE-TCR-SNS-AUX
+                          </option>
+                          <option >S2VE-TCR-ITP
+                          </option>
+                          <option >S2VE-TCR-TFM
+                          </option>
+                          <option >S2VE-TCR-CNE
+                          </option>
+                          <option >S2VE-PRS
+                          </option>
+                          <option >S2VE-PRS-REG
+                          </option>
+                          <option >S2VE-PRS-RLF
+                          </option>
+                          <option >S2VE-PRS-THP
+                          </option>
+                          <option >S2VE-PRS-THP-HES
+                          </option>
+                          <option >S2VE-PRS-THP-SNS
+                          </option>
+                          <option >S2VE-PRS-THP-USG
+                          </option>
+                          <option >S2VE-PLS
+                          </option>
+                          <option >S2VE-PLS-USC
+                          </option>
+                          <option >S2VE-PLS-USR
+                          </option>
+                          <option >S2VE-PLS-MCV
+                          </option>
+                          <option >S2VE-SEP
+                          </option>
+                          <option >S2VE-SEP-ACT
+                          </option>
+                          <option >S2VE-SEP-REC
+                          </option>
+                          <option >S2VE-SEP-PHR
+                          </option>
+                          <option >S2VE-RCS
+                          </option>
+                          <option >S2VE-RCS-USG
+                          </option>
+                          <option >S2VE-SST
+                          </option>
+                          <option >S3VE
+                          </option>
+                          <option >S3VE
+                          </option>
+                          <option >S3VE-KST
+                          </option>
+                          <option >S3VE-KST-STR
+                          </option>
+                          <option >S3VE-KST-SAB
+                          </option>
+                          <option >S3VE-KST-TNK
+                          </option>
+                          <option >S3VE-KST-TNK
+                          </option>
+                          <option >S3VE-KST-TNK-PMD
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-ASL
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-AVX
+                          </option>
+                          <option >S3VE-KST-TNK-PMD-FLR
+                          </option>
+                          <option >S3VE-KST-HES
+                          </option>
+                          <option >S3VE-KST-SNS
+                          </option>
+                          <option >S3VE-KST-USS
+                          </option>
+                          <option >S3VE-KST-USG
+                          </option>
+                          <option >S3VE-KST-ITP
+                          </option>
+                          <option >S3VE-SEP
+                          </option>
+                          <option >S3VE-SEP-ACT
+                          </option>
+                          <option >S3VE-SEP-REC
+                          </option>
+                          <option >S3VE-SEP-PHR
+                          </option>
+                          <option >S3VE-RCS
+                          </option>
+                          <option >S3VE-RCS-USG
+                          </option>
+                          <option >S3VE-DSP
+                          </option>
+                          <option >S3VE-FRG
+                          </option>
+                          <option >S3VE-FRG-STR
+                          </option>
+                          <option >S3VE-FRG-FLR
+                          </option>
+                          <option >S3VE-FRG-SNS
+                          </option>
+                          <option >S3VE-FRG-ITP
+                          </option>
+                          <option >S3VE-FRG-USH
+                          </option>
+                          <option >S3VE-FRG-SEP
+                          </option>
+                          <option >S3VE-FRG-SEP-ACT
+                          </option>
+                          <option >S3VE-FRG-SEP-REC
+                          </option>
+                          <option >S3VE-FRG-SEP-PHR
+                          </option>
+                          <option >S1PR
+                          </option>
+                          <option >S1PR-E01
+                          </option>
+                          <option >S1PR-E01-TCA
+                          </option>
+                          <option >S1PR-E01-TPU
+                          </option>
+                          <option >S1PR-E01-TPU-PMP
+                          </option>
+                          <option >S1PR-E01-TPU-CLT
+                          </option>
+                          <option >S1PR-E01-TPU-SEL
+                          </option>
+                          <option >S1PR-E01-TPU-TUR
+                          </option>
+                          <option >S1PR-E01-TPU-GGU
+                          </option>
+                          <option >S1PR-E01-TPU-IGN
+                          </option>
+                          <option >S1PR-E01-TPU-SSS
+                          </option>
+                          <option >S1PR-E01-TPU-BOV
+                          </option>
+                          <option >S1VE-PRS-RLF-200 
+                          </option>
+                          <option >S1PR-E01-TPU-SEN 
+                          </option>
+                          <option >S1PR-E02 
+                          </option>
+                          <option >S1PR-E02-SLE 
+                          </option>
+                          <option >S1PR-E02-RDF 
+                          </option>
+                          <option >S1PR-E02-0GA 
+                          </option>
+                          <option >S1PR-E02-0GA-IGN 
+                          </option>
+                          <option >S1PR-E02-0GA-GDT 
+                          </option>
+                          <option >S1PR-E02-0GA-GDT-RDF 
+                          </option>
+                          <option >S1PR-E02-0GA-SNS 
+                          </option>
+                          <option >S1PR-E02-0GA-OXL 
+                          </option>
+                          <option >S1PR-E02-0GA-OXL-APD 
+                          </option>
+                          <option >S1PR-E02-0GA-GEJ 
+                          </option>
+                          <option >S1PR-E02-0GA-PVC 
+                          </option>
+                          <option >S1PR-E02-0GA-FUL 
+                          </option>
+                          <option >S1PR-E02-0GA-SST 
+                          </option>
+                          <option >S1PR-E02-0GA-PUL 
+                          </option>
+                          <option >S1PR-E02-0GA-HTS 
+                          </option>
+                          <option >S1PR-E02-0GA-MTH 
+                          </option>
+                          <option >S1PR-E02-0GA-PRS 
+                          </option>
+                          <option >S1PR-E02-1EC 
+                          </option>
+                          <option >S1PR-E02-1EC-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-MIX 
+                          </option>
+                          <option >S1PR-E02-1EC-MIX-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-TCA 
+                          </option>
+                          <option >S1PR-E02-1EC-TCA-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-1EC-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-2TP 
+                          </option>
+                          <option >S1PR-E02-2TP-OXP 
+                          </option>
+                          <option >S1PR-E02-2TP-FUP 
+                          </option>
+                          <option >S1PR-E02-2TP-TUM 
+                          </option>
+                          <option >S1PR-E02-2TP-TUM-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB 
+                          </option>
+                          <option >S1PR-E02-3PB-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-MIX 
+                          </option>
+                          <option >S1PR-E02-3PB-MIX-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-TCA 
+                          </option>
+                          <option >S1PR-E02-3PB-TCA-RDF 
+                          </option>
+                          <option >S1PR-E02-3PB-IGN 
+                          </option>
+                          <option >S1PR-E02-3PB-IGN-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU 
+                          </option>
+                          <option >S1PR-E02-4CU-401 
+                          </option>
+                          <option >S1PR-E02-4CU-402 
+                          </option>
+                          <option >S1PR-E02-4CU-402-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-403 
+                          </option>
+                          <option >S1PR-E02-4CU-403-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-404 
+                          </option>
+                          <option >S1PR-E02-4CU-405 
+                          </option>
+                          <option >S1PR-E02-4CU-405-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-406 
+                          </option>
+                          <option >S1PR-E02-4CU-407 
+                          </option>
+                          <option >S1PR-E02-4CU-407-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-408 
+                          </option>
+                          <option >S1PR-E02-4CU-408-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-409 
+                          </option>
+                          <option >S1PR-E02-4CU-410 
+                          </option>
+                          <option >S1PR-E02-4CU-410-RDF 
+                          </option>
+                          <option >S1PR-E02-4CU-411 
+                          </option>
+                          <option >S1PR-E02-4CU-FTS 
+                          </option>
+                          <option >S1PR-E02-4CU-COX 
+                          </option>
+                          <option >S1PR-E02-ECU 
+                          </option>
+                          <option >S1PR-E02-TVC 
+                          </option>
+                          <option >S1PR-E02-TVC-ACT 
+                          </option>
+                          <option >S1PR-E02-TVC-PWR 
+                          </option>
+                          <option >S1PR-E02-TVC-GIM 
+                          </option>
+                          <option >S1PR-E02-TVC-MTH 
+                          </option>
+                          <option >S1PR-E02-AUX 
+                          </option>
+                          <option >S1PR-E02-AUX-RDF 
+                          </option>
+                          <option >S2PR 
+                          </option>
+                          <option >S2PR-E02 
+                          </option>
+                          <option >S2PR-E02-AUX 
+                          </option>
+                          <option >S2PR-E02-NEX 
+                          </option>
+                          <option >S3PR 
+                          </option>
+                          <option >S3PR-K01 
+                          </option>
+                          <option >S3PR-K01-TCA 
+                          </option>
+                          <option >S3PR-K01-TCA-IGN 
+                          </option>
+                          <option >S3PR-K01-TCA-INJ 
+                          </option>
+                          <option >S3PR-K01-TCA-TCH 
+                          </option>
+                          <option >S3PR-K01-TRV 
+                          </option>
+                          <option >S3PR-K01-TVC 
+                          </option>
+                          <option >S1AV 
+                          </option>
+                          <option >S1AV-NDE 
+                          </option>
+                          <option >S1AV-NDE-N01 
+                          </option>
+                          <option >S1AV-COM 
+                          </option>
+                          <option >S1AV-PWR 
+                          </option>
+                          <option >S1AV-PWR-BAT 
+                          </option>
+                          <option >S1AV-FTS 
+                          </option>
+                          <option >S1AV-EUS 
+                          </option>
+                          <option >S1AV-EUS-GRD 
+                          </option>
+                          <option >S1AV-EUS-GRD-COM 
+                          </option>
+                          <option >S1AV-EUS-GRD-PWR 
+                          </option>
+                          <option >S1AV-EUS-INT 
+                          </option>
+                          <option >S1AV-EUS-INT-COM 
+                          </option>
+                          <option >S1AV-EUS-INT-PWR 
+                          </option>
+                          <option >S1AV-WRG 
+                          </option>
+                          <option >S1AV-RTS 
+                          </option>
+                          <option >S1AV-RVY 
+                          </option>
+                          <option >S2AV 
+                          </option>
+                          <option >S2AV-NDE 
+                          </option>
+                          <option >S2AV-COM 
+                          </option>
+                          <option >S2AV-PWR 
+                          </option>
+                          <option >S2AV-FTS 
+                          </option>
+                          <option >S2AV-EUS 
+                          </option>
+                          <option >S2AV-WRG 
+                          </option>
+                          <option >S3AV 
+                          </option>
+                          <option >S3AV-NAV 
+                          </option>
+                          <option >S3AV-NAV-TSO 
+                          </option>
+                          <option >S3AV-NAV-SIM 
+                          </option>
+                          <option >S3AV-NAV-INS 
+                          </option>
+                          <option >S3AV-RFS 
+                          </option>
+                          <option >S3AV-FCS 
+                          </option>
+                          <option >S3AV-NDE 
+                          </option>
+                          <option >S3AV-COM 
+                          </option>
+                          <option >S3AV-PWR 
+                          </option>
+                          <option >S3AV-EUS 
+                          </option>
+                          <option >S3AV-WRG 
+                          </option>
+                          <option >GRND-3DP 
+                          </option>
+                          <option >GRND-3DP-MRO 
+                          </option>
+                          <option >GRND-VAC 
+                          </option>
+                          <option >GRND-EN1 
+                          </option>
+                          <option >GRND-EN1-MRO 
+                          </option>
+                          <option >GRND-SHK 
+                          </option>
+                          <option >GRND-SHK-MRO 
+                          </option>
+                          <option >GRND-ELC 
+                          </option>
+                          <option >GRND-HPH 
+                          </option>
+                          <option >GRND-HPH-MRO 
+                          </option>
+                          <option >GRND-NM1 
+                          </option>
+                          <option >GRND-NM1-DAQ 
+                          </option>
+                          <option >GRND-NM1-MRO 
+                          </option>
+                          <option >GRND-TPU 
+                          </option>
+                          <option >GRND-TPU-TRG 
+                          </option>
+                          <option >GRND-TPU-TRG-MRO 
+                          </option>
+                          <option >GRND-TPU-PTR 
+                          </option>
+                          <option >GRND-TPU-PTR-MRO 
+                          </option>
+                          <option >GRND-TPU-STR 
+                          </option>
+                          <option >GRND-TPU-STR-MRO 
+                          </option>
+                          <option >GRND-TPU-MRO 
+                          </option>
+                          <option >GRND-HIL 
+                          </option>
+                          <option >GRND-HIL-SCE 
+                          </option>
+                          <option >GRND-HIL-MRO 
+                          </option>
+                          <option >GRND-INS 
+                          </option>
+                          <option >GRND-INS-MRO 
+                          </option>
+                          <option >GRND-INS 
+                          </option>
+                          <option >GRND-INS-MRO 
+                          </option>
+                          <option >GRND-CRS 
+                          </option>
+                          <option >GRND-TS1 
+                          </option>
+                          <option >GRND-TS1-HTS 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1-PFT 
+                          </option>
+                          <option >GRND-TS1-HTS-TB1-PWP 
+                          </option>
+                          <option >GRND-TS1-HTS-MRO 
+                          </option>
+                          <option >GRND-TS1-VTS 
+                          </option>
+                          <option >GRND-TS1-VTS-IEQ 
+                          </option>
+                          <option >GRND-TS1-VTS-IST 
+                          </option>
+                          <option >GRND-TS1-VTS-MRO 
+                          </option>
+                          <option >GRND-TS1-HTX 
+                          </option>
+                          <option >GRND-TS1-HTX-MRO 
+                          </option>
+                          <option >GRND-TS1-MRO
+                          </option>
+                          <option >GRND-TAS
+                          </option>
+                          <option >GRND-TAS-SWG
+                          </option>
+                          <option >GRND-TAS-SWG-MRO
+                          </option>
+                          <option >GRND-TAS-SG1
+                          </option>
+                          <option >GRND-TAS-SG1-MRO
+                          </option>
+                          <option >GRND-TAS-SG2
+                          </option>
+                          <option >GRND-TAS-SG2-MRO
+                          </option>
+                          <option >GRND-TAS-MRO
+                          </option>
+                          <option >GRND-TVC
+                          </option>
+                          <option >GRND-TVC-LDB
+                          </option>
+                          <option >GRND-TVC-MRO
+                          </option>
+                          <option >GRND-INT
+                          </option>
+                          <option >GRND-INT-MRO
+                          </option>
+                          <option >GRND-HY1
+                          </option>
+                          <option >GRND-HY1-HST
+                          </option>
+                          <option >GRND-HY1-HST-MRO
+                          </option>
+                          <option >GRND-HY1-CTN
+                          </option>
+                          <option >GRND-HY1-CTN-MRO
+                          </option>
+                          <option >GRND-HY1-CLN
+                          </option>
+                          <option >GRND-HY1-CLN-MRO
+                          </option>
+                          <option >GRND-HY1-MRO
+                          </option>
+                          <option >GRND-HFR
+                          </option>
+                          <option >GRND-HFR-MRO
+                          </option>
+                          <option >GRND-BST
+                          </option>
+                          <option >GRND-BST-MRO
+                          </option>
+                          <option >GRND-INJ
+                          </option>
+                          <option >GRND-INJ-MRO
+                          </option>
+                          <option >GRND-STR
+                          </option>
+                          <option >GRND-STR-VE1
+                          </option>
+                          <option >GRND-STR-VE1-MRO
+                          </option>
+                          <option >GRND-STR-REL
+                          </option>
+                          <option >GRND-STR-REL-MRO
+                          </option>
+                          <option >GRND-STR-SEP
+                          </option>
+                          <option >GRND-STR-SEP-MRO
+                          </option>
+                          <option >GRND-STR-FRG
+                          </option>
+                          <option >GRND-STR-FRG-MRO
+                          </option>
+                          <option >GRND-STR-COM
+                          </option>
+                          <option >GRND-STR-COM-MRO
+                          </option>
+                          <option >GRND-STR-KST
+                          </option>
+                          <option >GRND-STR-KST-MRO
+                          </option>
+                          <option >GRND-STR-MRO
+                          </option>
+                          <option >GRND-SNS
+                          </option>
+                          <option >GRND-SNS-PSS
+                          </option>
+                          <option >GRND-SNS-MRO
+                          </option>
+                          <option >GRND-PDT
+                          </option>
+                          <option >GRND-PDT-MRO
+                          </option>
+                          <option >GRND-SLT
+                          </option>
+                          <option >GRND-SLT-IST
+                          </option>
+                          <option >GRND-SLT-OST
+                          </option>
+                          <option >GRND-SLT-OST-PMD
+                          </option>
+                          <option >GRND-SLT-OST-PMD-ASL
+                          </option>
+                          <option >GRND-SLT-OST-PMD-AVX
+                          </option>
+                          <option >GRND-SLT-OST-PMD-FLR
+                          </option>
+                          <option >GRND-SLT-IST
+                          </option>
+                          <option >GRND-SLT-OST
+                          </option>
+                          <option >GRND-SLT-HEX
+                          </option>
+                          <option >GRND-FUR
+                          </option>
+                          <option >GRND-FUR-MRO
+                          </option>
+                          <option >GRND-PST
+                          </option>
+                          <option >GRND-PST-MRO
+                          </option>
+                          <option >GRND-PHS
+                          </option>
+                          <option >GRND-PHS-MRO
+                          </option>
+                          <option >GRND-PD2
+                          </option>
+                          <option >GRND-PD2-MRO
+                          </option>
+                          <option >FCLY-WS1
+                          </option>
+                          <option >FCLY-WS1-CON
+                          </option>
+                          <option >FCLY-WS1-PPE
+                          </option>
+                          <option >FCLY-WS2
+                          </option>
+                          <option >FCLY-WS2-REL
+                          </option>
+                          <option >FCLY-WS2-OFF
+                          </option>
+                          <option >FCLY-WS2-PRO
+                          </option>
+                          <option >FCLY-WS2-CON
+                          </option>
+                          <option >FCLY-WS2-PPE
+                          </option>
+                          <option >FCLY-WS2-CLN
+                          </option>
+                          <option >FCLY-WS2-ELC
+                          </option>
+                          <option >FCLY-WS2-TST
+                          </option>
+                          <option >FCLY-WS2-MAC
+                          </option>
+                          <option >FCLY-WS2-MAC-MRO
+                          </option>
+                          <option >FCLY-WSP
+                          </option>
+                          <option >FCLY-WSP-OFF
+                          </option>
+                          <option >FCLY-WSP-PRO
+                          </option>
+                          <option >FCLY-WSP-CON
+                          </option>
+                          <option >FCLY-WSP-PPE
+                          </option>
+                          <option >FCLY-IT 
+                          </option>
+                          <option >FCLY-IT-USR  
+                          </option>
+                          <option >FCLY-IT-ITI   
+                          </option>
+                          <option >FCLY-SSC   
+                          </option>
+                          <option >FCLY-C1    
+                          </option>
+                          <option >FCLY-TC1   
+                          </option>
+                          <option >FCLY-MCC  
+                          </option>
+                          <option >FCLY-MCC-MCS  
+                          </option>
+                          <option >BDSM-MKT  
+                          </option>
+                          <option >BDSM-MKT-EVT  
+                          </option>
+                          <option >BDSM-MKT-WEB  
+                          </option>
+                          <option >BDSM-MKT-SMX 
+                          </option>
+                          <option >BDSM-MKT-SYM 
+                          </option>
+                          <option >BDSM-SAL 
+                          </option>
+                          <option >BDSM-SAL-AST 
+                          </option>
+                          <option >BDSM-SAL-RAY 
+                          </option>
+                          <option >BDSM-SAL-OSE 
+                          </option>
+                          <option >BDSM-SAL-CLS
+                          </option>
+                          <option >BDSM-SAL-OIT
+                          </option>
+                          <option >BDSM-SAL-AST
+                          </option>
+                          <option >BDSM-SAL-PIM
+                          </option>
+                          <option >BDSM-SAL-PUG
+                          </option>
+                          <option >BDSM-BDX
+                          </option>
+                          <option >BDSM-BDX-ESA
+                          </option>
+                          <option >BDSM-BDX-ESA-LCA
+                          </option>
+                          <option >BDSM-BDX-ESA-CST
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP1
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP2
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-OP3
+                          </option>
+                          <option >BDSM-BDX-ESA-CST-FP1
+                          </option>
+                          <option >BDSM-BDX-ESA-PD2
+                          </option>
+                          <option >BDSM-BDX-ESA-FAM
+                          </option>
+                          <option >BDSM-BDX-EMS
+                          </option>
+                          <option >BDSM-BDX-MCS
+                          </option>
+                          <option >BDSM-BDX-BAY
+                          </option>
+                          <option >BDSM-BDX-NMO
+                          </option>
+                          <option >BDSM-BDX-NMO-UM2
+                          </option>
+                          <option >BDSM-BDX-NMO-EL3
+                          </option>
+                          <option >BDSM-BDX-KSP
+                          </option>
+                          <option >BDSM-BDX-BJS
+                          </option>
+                          <option >BDSM-BDX-F9X
+                          </option>
+                          <option >BDSM-BDX-RAF
+                          </option>
+                          <option >BDSM-BDX-RAF-TPB
+                          </option>
+                          <option >BDSM-BDX-RAF-CCT
+                          </option>
+                          <option >BDSM-BDX-RAF-NAM
+                          </option>
+                          <option >BDSM-BDX-RAF-CBP
+                          </option>
+                          <option >BDSM-BDX-RAF-REM
+                          </option>
+                          <option >BDSM-BDX-EUC
+                          </option>
+                          <option >BDSM-BDX-EUC-LCL
+                          </option>
+                          <option >BDSM-BDX-EUC-HEU
+                          </option>
+                          <option >BDSM-BDX-EUC-ETP
+                          </option>
+                          <option >BDSM-BDX-EUC-SCI
+                          </option>
+                          <option >BDSM-BDX-AIC
+                          </option>
+                          <option >FDPT-ESA
+                          </option>
+                          <option >FDPT-ESA-LCA
+                          </option>
+                          <option >FDPT-ESA-CST
+                          </option>
+                          <option >FDPT-ESA-CST-FSD
+                          </option>
+                          <option >FDPT-ESA-CST-OSD
+                          </option>
+                          <option >FDPT-ESA-NST
+                          </option>
+                          <option >FDPT-NMO
+                          </option>
+                          <option >FDPT-NMO-UM2
+                          </option>
+                          <option >FDPT-EMS
+                          </option>
+                          <option >FDPT-MCS
+                          </option>
+                          <option >FDPT-KSP
+                          </option>
+                          <option >FDPT-AWO
+                          </option>
+                          <option >FDPT-AIC
+                          </option>
+                          <option >C1
+                          </option>
+                          <option >C1AZ
+                          </option>
+                          <option >C1AZ-PAD
+                          </option>
+                          <option >C1AZ-PAD-GAS
+                          </option>
+                          <option >C1AZ-PAD-LOX
+                          </option>
+                          <option >C1AZ-PAD-LN2
+                          </option>
+                          <option >C1AZ-PAD-AIF
+                          </option>
+                          <option >C1AZ-PAD-WDS
+                          </option>
+                          <option >C1AZ-PAD-UM1
+                          </option>
+                          <option >C1AZ-PAD-LPS
+                          </option>
+                          <option >C1AZ-PAD-ERC
+                          </option>
+                          <option >C1AZ-PAD-IXF
+                          </option>
+                          <option >C1AZ-PAD-IXF-FSP
+                          </option>
+                          <option >C1AZ-GRY
+                          </option>
+                          <option >C1AZ-SEA
+                          </option>
+                          <option >C1AZ-DGS
+                          </option>
+                          <option >C1AZ-FLY
+                          </option>
+                          <option >C1AZ-OPS
+                          </option>
+                          <option >C1AZ-LCC
+                          </option>
+                          <option >C1AZ-SLV
+                          </option>
+                          <option >C1AZ-LOG
+                          </option>
+                          <option >C1NO
+                          </option>
+                          <option >C1NO-FLY
+                          </option>
+                          <option >C1AZ-OPS
+                          </option>
+                          <option >C1AZ-LCC
+                          </option>
+                          <option >C1AZ-SLV
+                          </option>
+                          <option >C1AZ-LOG
+                          </option>
+                          <option >C1NO
+                          </option>
+                          <option >C1NO-FLY
+                          </option>
+                          <option >C1NO-PAD
+                          </option>
+                          <option >C1NO-LIC
+                          </option>
+                          <option >C1NO-IXF
+                          </option>
+                          <option >C2FR
+                          </option>
+                          <option >C2FR-FLY
+                          </option>
+                          <option >C2FR-OPS
+                          </option>
+                          <option >C2FR-GRY
+                          </option>
+                          <option >C4CA
+                          </option>
+                          <option >C5DE
+                          </option>
+                          <option >C6OM
+                          </option>
+                          <option >C7UK
+                          </option>
+                          <option >Management
+                          </option>
+                          <option >IT
+                          </option>
+                      </datalist>
+
+
+
+
+
+
+                        <td>
+                          <input type = "submit"
+                          value ="Check Forecast Plot"
+                          name = "generate2"
+                          class ="btn btn-outline-primary"
+                          style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+                      </td>
+          
+          <td style = "width: 5%"></td>
+        </tr>
+
+        </table>
+
+
+            <hr>
+            <h5  style="font-family:monospace"> <b>Time Series Forecasting by Deep Learning (LSTM Model) </b> </h5>
+           <table>
+             <tr>
+
+    
+              <td> <div class="slidecontainer" style = "font-family: monospace;">
+               <input type="range" min="2" max="10" value = "3" step="1" id = "myRange7" name = 'time_steps' >
+         
+               Time Steps: <span id="demo7"></span> 
+           
+             </div> 
+             <script>
+               var slider7 = document.getElementById("myRange7");
+               var output7 = document.getElementById("demo7");
+               output7.innerHTML = slider7.value;
+               
+               slider7.oninput = function() {
+                 output7.innerHTML = this.value;
+               }
+               </script>
+           </td>
+           <td style = "width: 5%"></td>
+           <td> <div class="slidecontainer" style = "font-family: monospace;">
+            <input type="range" min="10" max="200" value = "58" step="8" id = "myRange8" name = 'epoch2' >
+      
+            Epochs: <span id="demo8"></span> 
+        
+          </div> 
+          <script>
+            var slider8 = document.getElementById("myRange8");
+            var output8 = document.getElementById("demo8");
+            output8.innerHTML = slider8.value;
+            
+            slider8.oninput = function() {
+              output8.innerHTML = this.value;
+            }
+            </script>
+        </td>
+
+      </td>
+      <td style = "width: 5%"></td>
+      <td> <div class="slidecontainer" style = "font-family: monospace;">
+        <input type="range" min="0.5" max="1" value = "0.85" step="0.05" id = "myRange10" name = 'train_test' >
+  
+        Train data % : <span id="demo10"></span> 
+    
+      </div> 
+      <script>
+        var slider10 = document.getElementById("myRange10");
+        var output10 = document.getElementById("demo10");
+        output10.innerHTML = slider10.value;
+        
+        slider10.oninput = function() {
+          output10.innerHTML = this.value;
+        }
+        </script>
+    </td>
+
+    <td style = "width: 5%"></td>
+
+
+      <td> <div class="slidecontainer" style = "font-family: monospace;">
+       <input type="range" min="0" max="50" value = "2" step="1" id = "myRange9" name = 'tolerance3' >
+ 
+       Tolerance: <span id="demo9"></span> 
+   
+     </div> 
+     <script>
+       var slider9 = document.getElementById("myRange9");
+       var output9 = document.getElementById("demo9");
+       output9.innerHTML = slider9.value;
+       
+       slider9.oninput = function() {
+         output9.innerHTML = this.value;
+       }
+       </script>
+   </td>
+
+
+           <td style = "width: 10%"></td>
+              <td>
+                <input type = "submit"
+                value ="Super Forecast"
+                name = "forecast2"
+                class = "btn btn-outline-success"
+                style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+            </td>
+            <td style = "width: 8%">        </td>
+            <td style = "font-family: monospace;"> Test&nbspAccuracy: </td>
+           
+            <td style = "font-family: monospace;"> <span> {{accuracy3}}</span></td>
+            <td style = "font-family: monospace;"> %</td>
+
+
+         
+
+          </td>
+          <td style = "width: 8%">        </td>
+          <td style = "font-family: monospace;"> Month: </td>
+          <td style = "font-family: monospace;"> <span> {{time}}</span></td>
+          <td style = "width: 8%"></td>
+
+                  
+
+          <td style = "width: 50%"> </td>
+
+                </tr>
+           </table>
+          </br>
+           <p style = "font-family: monospace;"> The Predicted Total expenditure for all System Codes for the diplayed month: <b class="myDIV">{{total_expenditure2}}</b>  &nbsp(Estimated range: <b class="myDIV">{{lower_predict2}}</b> - <b class="myDIV">{{upper_predict2}}</b> for Tolerance: <b>{{tolerance3}}</b> and last selected Epoch: <b>{{epoch2}}</b>)
+
+
+        </form>
+      
+    </center>
+    <script>
+      let x = document.querySelectorAll(".myDIV");
+      for (let i = 0, len = x.length; i < len; i++) {
+          let num = Number(x[i].innerHTML)
+                    .toLocaleString('de');
+          x[i].innerHTML = num;
+          x[i].classList.add("currSign");
+      }
+  </script>
+    </body>
+</html>
